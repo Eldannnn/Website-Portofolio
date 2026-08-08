@@ -1,3 +1,5 @@
+window.addEventListener('load', () => document.body.classList.add('loaded'));
+
 // ── Scroll Reveal ──
 const revealObs = new IntersectionObserver((entries) => {
   entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
@@ -35,7 +37,7 @@ document.addEventListener('mousemove', (e) => {
 // ── Typewriter ──
 const twEl = document.querySelector('.typewriter');
 if (twEl) {
-  const texts = ['Backend Developer', 'Node.js Enthusiast', 'Problem Solver', 'Informatics Student'];
+  const texts = ['Backend Developer', 'Node.js Enthusiast', 'Problem Solver', 'Informatics Graduate'];
   let ti = 0, ci = 0, deleting = false;
   function tick() {
     const cur = texts[ti];
@@ -90,6 +92,8 @@ document.querySelectorAll('.skill-tag').forEach(tag => {
   });
   tag.addEventListener('mouseleave', () => { tag.style.transform = ''; });
 });
+
+
 
 // ── Parallax Orbs ──
 window.addEventListener('scroll', () => {
