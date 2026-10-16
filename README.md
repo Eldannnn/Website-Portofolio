@@ -22,15 +22,6 @@ A premium, royal-themed personal portfolio website built with HTML, Vanilla CSS,
 - **Logic**: Vanilla JavaScript (ES6+)
 - **Icons & Logos**: [Devicon](https://devicon.dev/) & Custom SVGs
 
-## 🚀 Getting Started
-
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/Eliandani/Website-Portofolio.git
-   ```
-2. **Open the project**:
-   Simply open `index.html` in your favorite web browser.
-
 ## 📁 Project Structure
 
 ```text
