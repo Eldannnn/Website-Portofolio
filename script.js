@@ -1,117 +1,274 @@
-window.addEventListener('load', () => document.body.classList.add('loaded'));
+/**
+ * Eliandani — Interactive behaviors & accessibility enhancements
+ * Zero dependencies, keyboard accessible, robust fallback if JS is interrupted.
+ */
 
-// ── Scroll Reveal ──
-const revealObs = new IntersectionObserver((entries) => {
-  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-document.querySelectorAll('section, .stagger').forEach(el => revealObs.observe(el));
-
-// ── Navbar ──
-const navbar = document.querySelector('.navbar');
-window.addEventListener('scroll', () => {
-  navbar.classList.toggle('scrolled', window.scrollY > 50);
-  // Active nav
-  const sections = document.querySelectorAll('section[id]');
-  const links = document.querySelectorAll('.nav-links a');
-  let cur = '';
-  sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) cur = s.id; });
-  links.forEach(l => { l.classList.toggle('active', l.getAttribute('href') === `#${cur}`); });
+document.addEventListener('DOMContentLoaded', () => {
+  initHeader();
+  initMobileNav();
+  initScrollReveal();
+  initSpotlight();
+  initClipboard();
+  initLocalTime();
+  initCurrentYear();
 });
 
-// ── Mobile Nav ──
-const navToggle = document.getElementById('nav-toggle');
-const navLinks = document.getElementById('nav-links');
-if (navToggle) {
-  navToggle.addEventListener('click', () => { navLinks.classList.toggle('open'); });
-  document.querySelectorAll('.nav-links a').forEach(l => {
-    l.addEventListener('click', () => navLinks.classList.remove('open'));
+/**
+ * 1. Sticky header elevation & section link tracking (aria-current)
+ */
+function initHeader() {
+  const header = document.getElementById('siteHeader');
+  const sections = document.querySelectorAll('main > section[id]');
+  const navLinks = document.querySelectorAll('.nav-link');
+
+  if (!header) return;
+
+  let ticking = false;
+
+  const onScroll = () => {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        const y = window.scrollY;
+
+        // Scrolled header border
+        header.classList.toggle('is-scrolled', y > 24);
+
+        // Section tracker
+        let currentId = '';
+        sections.forEach((section) => {
+          const top = section.offsetTop - 120;
+          const height = section.offsetHeight;
+          if (y >= top && y < top + height) {
+            currentId = section.getAttribute('id');
+          }
+        });
+
+        navLinks.forEach((link) => {
+          const href = link.getAttribute('href');
+          const isCurrent = href === `#${currentId}`;
+          if (isCurrent) {
+            link.setAttribute('aria-current', 'true');
+          } else {
+            link.removeAttribute('aria-current');
+          }
+        });
+
+        ticking = false;
+      });
+      ticking = true;
+    }
+  };
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+}
+
+/**
+ * 2. Mobile navigation drawer with ARIA disclosure state
+ */
+function initMobileNav() {
+  const toggle = document.getElementById('navToggle');
+  const nav = document.getElementById('siteNav');
+
+  if (!toggle || !nav) return;
+
+  const setOpen = (open) => {
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    nav.classList.toggle('is-open', open);
+  };
+
+  toggle.addEventListener('click', () => {
+    const isOpen = toggle.getAttribute('aria-expanded') === 'true';
+    setOpen(!isOpen);
+  });
+
+  // Close when tapping any nav link
+  nav.querySelectorAll('.nav-link').forEach((link) => {
+    link.addEventListener('click', () => setOpen(false));
+  });
+
+  // Close on Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+      setOpen(false);
+      toggle.focus();
+    }
+  });
+
+  // Close on outside click
+  document.addEventListener('click', (e) => {
+    if (
+      toggle.getAttribute('aria-expanded') === 'true' &&
+      !nav.contains(e.target) &&
+      !toggle.contains(e.target)
+    ) {
+      setOpen(false);
+    }
   });
 }
 
-// ── Mouse Glow ──
-document.addEventListener('mousemove', (e) => {
-  document.documentElement.style.setProperty('--mx', (e.clientX / window.innerWidth * 100) + '%');
-  document.documentElement.style.setProperty('--my', (e.clientY / window.innerHeight * 100) + '%');
-});
+/**
+ * 3. Scroll reveal with IntersectionObserver
+ */
+function initScrollReveal() {
+  const items = document.querySelectorAll('.reveal');
+  if (!items.length) return;
 
-// ── Typewriter ──
-const twEl = document.querySelector('.typewriter');
-if (twEl) {
-  const texts = ['Backend Developer', 'Node.js Enthusiast', 'Problem Solver', 'Informatics Graduate'];
-  let ti = 0, ci = 0, deleting = false;
-  function tick() {
-    const cur = texts[ti];
-    ci += deleting ? -1 : 1;
-    twEl.textContent = cur.substring(0, ci);
-    let speed = deleting ? 35 : 70;
-    if (!deleting && ci === cur.length) { speed = 2500; deleting = true; }
-    else if (deleting && ci === 0) { deleting = false; ti = (ti + 1) % texts.length; speed = 400; }
-    setTimeout(tick, speed);
-  }
-  tick();
+  // Immediate reveal for elements above or near the fold
+  const revealIfInView = (el) => {
+    const rect = el.getBoundingClientRect();
+    if (rect.top <= window.innerHeight + 60) {
+      el.classList.add('is-visible');
+      return true;
+    }
+    return false;
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {
+    threshold: 0.05,
+    rootMargin: '0px 0px 80px 0px'
+  });
+
+  items.forEach((el) => {
+    if (!revealIfInView(el)) {
+      observer.observe(el);
+    }
+  });
 }
 
-// ── Counter Animation ──
-const statObs = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (!e.isIntersecting) return;
-    e.target.querySelectorAll('[data-count]').forEach(c => {
-      if (c.classList.contains('counted')) return;
-      c.classList.add('counted');
-      const target = parseFloat(c.dataset.count);
-      const suffix = c.dataset.suffix || '';
-      const dec = target % 1 !== 0;
-      const start = performance.now();
-      (function update(now) {
-        const p = Math.min((now - start) / 2000, 1);
-        const eased = 1 - Math.pow(1 - p, 3);
-        c.textContent = (dec ? (target * eased).toFixed(2) : Math.floor(target * eased)) + suffix;
-        if (p < 1) requestAnimationFrame(update);
-      })(start);
+/**
+ * 4. Radial card spotlight effect following the pointer
+ */
+function initSpotlight() {
+  // Only activate on devices with fine pointer (mouse/trackpad), skips touchscreens
+  if (window.matchMedia('(hover: none)').matches) return;
+
+  const cards = document.querySelectorAll('.spotlight');
+  if (!cards.length) return;
+
+  cards.forEach((card) => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      card.style.setProperty('--mx', `${x}px`);
+      card.style.setProperty('--my', `${y}px`);
     });
   });
-}, { threshold: 0.5 });
-document.querySelectorAll('.hero-stats').forEach(el => statObs.observe(el));
+}
 
-// ── Smooth Scroll ──
-document.querySelectorAll('a[href^="#"]').forEach(a => {
-  a.addEventListener('click', function(e) {
-    e.preventDefault();
-    const t = document.querySelector(this.getAttribute('href'));
-    if (t) window.scrollTo({ top: t.offsetTop - 80, behavior: 'smooth' });
+/**
+ * 5. One-click clipboard copy with toast confirmation
+ */
+function initClipboard() {
+  const triggers = document.querySelectorAll('[data-copy]');
+  if (!triggers.length) return;
+
+  triggers.forEach((trigger) => {
+    trigger.addEventListener('click', (e) => {
+      e.preventDefault();
+      const text = trigger.getAttribute('data-copy');
+      if (!text) return;
+
+      copyText(text)
+        .then(() => showToast(`Copied ${text}`))
+        .catch(() => showToast(text));
+    });
   });
-});
+}
 
-// ── Skill Tag Tilt ──
-document.querySelectorAll('.skill-tag').forEach(tag => {
-  tag.addEventListener('mousemove', (e) => {
-    const r = tag.getBoundingClientRect();
-    const rx = (e.clientY - r.top - r.height / 2) / 10;
-    const ry = (r.width / 2 - (e.clientX - r.left)) / 10;
-    tag.style.transform = `translateY(-3px) perspective(500px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+function copyText(str) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    return navigator.clipboard.writeText(str);
+  }
+  // Fallback for non-HTTPS or older browsers
+  return new Promise((resolve, reject) => {
+    const ta = document.createElement('textarea');
+    ta.value = str;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      const ok = document.execCommand('copy');
+      document.body.removeChild(ta);
+      ok ? resolve() : reject();
+    } catch (err) {
+      document.body.removeChild(ta);
+      reject(err);
+    }
   });
-  tag.addEventListener('mouseleave', () => { tag.style.transform = ''; });
-});
+}
 
+/**
+ * 6. Polite floating toast feedback
+ */
+let toastTimeout;
+function showToast(message) {
+  const region = document.getElementById('toastRegion');
+  if (!region) return;
 
+  clearTimeout(toastTimeout);
+  region.innerHTML = '';
 
-// ── Parallax Orbs ──
-window.addEventListener('scroll', () => {
-  document.querySelectorAll('.orb').forEach((o, i) => {
-    o.style.transform = `translateY(${window.scrollY * (i + 1) * 0.03}px)`;
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = message;
+
+  region.appendChild(toast);
+
+  // Trigger CSS transition
+  requestAnimationFrame(() => {
+    toast.classList.add('is-visible');
   });
-});
 
-// ── Floating Particles ──
-const particleContainer = document.getElementById('particles');
-if (particleContainer) {
-  for (let i = 0; i < 30; i++) {
-    const p = document.createElement('div');
-    p.className = 'particle';
-    p.style.left = Math.random() * 100 + '%';
-    p.style.animationDuration = (8 + Math.random() * 12) + 's';
-    p.style.animationDelay = (Math.random() * 10) + 's';
-    p.style.width = p.style.height = (1 + Math.random() * 2) + 'px';
-    particleContainer.appendChild(p);
+  toastTimeout = setTimeout(() => {
+    toast.classList.remove('is-visible');
+    toast.addEventListener('transitionend', () => toast.remove(), { once: true });
+  }, 2400);
+}
+
+/**
+ * 7. Live WIB (UTC+7) clock in the portrait badge
+ */
+function initLocalTime() {
+  const timeEl = document.querySelector('[data-local-time]');
+  if (!timeEl) return;
+
+  const update = () => {
+    try {
+      const now = new Date();
+      // Formatter locked to Asia/Jakarta (WIB, UTC+7)
+      const formatted = new Intl.DateTimeFormat('id-ID', {
+        timeZone: 'Asia/Jakarta',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+      }).format(now);
+      timeEl.textContent = `${formatted} WIB`;
+    } catch {
+      timeEl.textContent = 'UTC+7';
+    }
+  };
+
+  update();
+  setInterval(update, 30000);
+}
+
+/**
+ * 8. Automatic current year in footer
+ */
+function initCurrentYear() {
+  const yearEl = document.querySelector('[data-current-year]');
+  if (yearEl) {
+    yearEl.textContent = String(new Date().getFullYear());
   }
 }

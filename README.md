@@ -1,41 +1,61 @@
-# 🏛️ Portfolio - Eliandani Andreskia Setiawan
+# 💻 Eliandani Andreskia Setiawan &mdash; Software Developer Portfolio
 
-A premium, royal-themed personal portfolio website built with HTML, Vanilla CSS, and Vanilla JavaScript. This project showcases my journey as a Backend Developer and Informatics student at Universitas Atma Jaya Yogyakarta.
+A restrained, modern editorial portfolio website built with semantic HTML5, modern CSS3, and Vanilla JavaScript. Engineered for software engineering recruiters and engineering managers, highlighting experience in building scalable web applications, robust APIs, and intelligent decision support modules.
 
-## ✨ Features
+---
 
-- **Royal Aesthetic**: A sophisticated navy and gold color palette with refined typography (Playfair Display & Cinzel).
-- **Interactive Animations**: 
-  - Typewriter effect for roles.
-  - Smooth scroll reveal animations for sections.
-  - Dynamic counter animations for statistics.
-  - Animated gold aura and rotating rings around the profile photo.
-- **Responsive Layout**: Fully optimized for desktops, tablets, and mobile devices.
-- **Project Showcase**: Detailed view of my top projects like Atma Barber, My Digilibrary, and ReUseMart.
-- **Dynamic Skills**: Hard skills with official technology logos and interactive hover effects.
-- **Modern Performance**: Lightweight, zero dependencies, and extremely fast loading.
+## ⚡ Key Highlights & Design Direction
 
-## 🛠️ Tech Stack
+- **Restrained Editorial Aesthetic**: Clean neutral dark palette (`#09090b` / `#131316`) paired with modern typography ([Geist](https://vercel.com/font) & [Geist Mono](https://vercel.com/font)) and a refined electric blue accent (`#38bdf8`) used with high intentionality.
+- **Agentic Engineering Velocity**: Leverages modern AI/Agentic developer environments ([Google Antigravity](https://antigravity.google/)) for accelerated delivery, robust testing, and clean architecture without compromising engineering fundamentals.
+- **Crafted User Experience**:
+  - Live availability indicator (`🔵 Open to full-time Software Engineer roles`).
+  - Interactive radial spotlight effect on project cards following cursor movement.
+  - Numbered sticky section headers providing clear context during vertical navigation.
+  - One-click **Copy Email** action with polite, non-intrusive toast feedback.
+  - Live UTC+7 (WIB) local time badge in the hero portrait.
+  - Full keyboard accessibility with visible `:focus-visible` rings and a skip link.
+- **Strict Accessibility & Mobile Standards**:
+  - Full compliance with **WCAG 2.2 AA** contrast standards across all typography and interactive elements.
+  - Zero horizontal overflow across mobile viewports down to 375px (`scrollWidth` = `innerWidth`).
+  - Built-in support for `@media (prefers-reduced-motion: reduce)`.
+  - Semantic HTML5 structure (`<header>`, `<nav>`, `<main>`, `<section>`, `<footer>`).
+- **Zero Heavy Dependencies**:
+  - Pure Vanilla JS and CSS tokens with zero framework runtime overhead, loading instantly.
 
-- **Structure**: HTML5
-- **Styling**: Vanilla CSS3 (Custom design system, no frameworks)
-- **Logic**: Vanilla JavaScript (ES6+)
-- **Icons & Logos**: [Devicon](https://devicon.dev/) & Custom SVGs
+---
+
+## 🛠️ Tech Stack & Architecture
+
+- **Markup**: Semantic HTML5 with ARIA landmark attributes
+- **Styling**: Modern CSS3 (CSS Variables, Flexbox/Grid, Spotlight Gradient, Responsive Breakpoints)
+- **Scripting**: Modular Vanilla JavaScript (ES6+, IntersectionObserver, Clipboard API, Intl API)
+- **Typography**: [Geist](https://fonts.google.com/specimen/Geist) & [Geist Mono](https://fonts.google.com/specimen/Geist+Mono)
+- **Icons**: Clean vector SVG icons
+
+---
 
 ## 📁 Project Structure
 
 ```text
-├── index.html     # Main structure and content
-├── style.css      # Design system and royal theme styles
-├── script.js     # Animations and interactive logic
-└── fotoProfil.png # Profile image
+├── index.html     # Semantic page structure, meta tags, and project cards
+├── style.css      # CSS design system, typography scales, and responsive layout
+├── script.js      # Spotlight effect, clipboard handler, header scroll, and toast system
+├── favico.svg     # Scalable vector favicon
+├── favico.png     # Fallback 64x64 PNG favicon
+└── fotoProfil.png # Profile portrait photography (case-sensitive)
 ```
 
-## 📬 Contact
+---
+
+## 📬 Contact & Connect
 
 - **Email**: [eliandani52@gmail.com](mailto:eliandani52@gmail.com)
+- **WhatsApp**: [+62 813-4315-5142](https://wa.me/6281343155142)
 - **LinkedIn**: [linkedin.com/in/eliandani](https://www.linkedin.com/in/eliandani)
-- **GitHub**: [@Eliandani](https://github.com/Eliandani)
+- **GitHub**: [github.com/Eldannnn](https://github.com/Eldannnn)
+- **Location**: DKI Jakarta, Indonesia
 
 ---
-*Created with passion by Eliandani Andreskia Setiawan*
+
+_Crafted with attention to detail by Eliandani Andreskia Setiawan_

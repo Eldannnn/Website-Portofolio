@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#3b82f6"/>
+    </linearGradient>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#111827"/>
+      <stop offset="100%" stop-color="#0b0f17"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#38bdf8" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <!-- Container background with rounded corners -->
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#bgGrad)" stroke="#38bdf8" stroke-width="1.5" stroke-opacity="0.4"/>
+  
+  <!-- Subtle inner border highlight -->
+  <rect x="3.5" y="3.5" width="57" height="57" rx="12.5" fill="none" stroke="#ffffff" stroke-width="0.75" stroke-opacity="0.08"/>
+
+  <!-- Brand Monogram EA -->
+  <g filter="url(#glow)">
+    <text x="32" y="41" 
+          font-family="'Geist Mono', 'SF Mono', 'Segoe UI Mono', Consolas, monospace" 
+          font-size="25" 
+          font-weight="700" 
+          letter-spacing="-1.5" 
+          text-anchor="middle" 
+          fill="url(#blueGrad)">EA</text>
+  </g>
+
+  <!-- Subtle accent dot -->
+  <circle cx="51" cy="14" r="2.5" fill="#38bdf8"/>
+</svg>
